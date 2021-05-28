@@ -24,17 +24,20 @@ const io = SocketIO(http, {
     cors: {}
 })
 
+const messages = []
+
 io.on('connection', (socket) => {
     console.log('Got a connection')
 
     socket.on('message', (arg) => {
         console.log('got a connection', arg)
+        
         socket.on('message', (arg) => {
-            console.log('Got a message:', arg)
-            setTimeout(() => {
-                socket.emit('serverMessage', 'Hello from server')
-            }, 2000)
+            const message = `${socket.id} is on screen ${arg.screen}`
+            messages.push(message)
+            io.emit('serverMessage', message)
         })
+        socket.emit('serverMessages', messages)
     })
 })
 
@@ -44,9 +47,3 @@ const PORT = process.env.PORT || 8081
 const server = http.listen(PORT, () => {
     console.log(`Server running on port ${PORT}.`)
 })
-
-// server.on('upgrade', (request, socket, head) => {
-//     wsServer.handleUpgrade(request, socket, head, socket => {
-//         wsServer.emit('connection', socket, request)
-//     })
-// })
