@@ -16,14 +16,31 @@ class Match {
 
     check() {
         if (this.finished()) {
-            const result = this.whoWins()
+            let winner = this.whoWins()
 
-            this.player1.emit('matchResult', {
-                winner: result ? result.serialize() : null
-            })
-            this.player2.emit('matchResult', {
-                winner: result ? result.serialize() : null
-            })
+            if (winner != null) {
+                winner = {
+                    username: winner.username,
+                    turn: winner.turn
+                }
+            }
+
+            let matchResult = {
+                winner: winner,
+                players: [
+                    {
+                        username: this.player1.username,
+                        turn: this.player1.turn
+                    },
+                    {
+                        username: this.player2.username,
+                        turn: this.player2.turn
+                    }
+                ]
+            }
+
+            this.player1.emit('matchResult', matchResult)
+            this.player2.emit('matchResult', matchResult)
         }
     }
 
@@ -35,21 +52,18 @@ class Match {
         console.log('player1', this.player1.turn)
         console.log('player2', this.player2.turn)
 
-        
-            // Programming task: Implement the game rules
+        /*
+            Programming task: Implement the game rules
             
-            // this.player1.turn = ['rock', 'paper', 'scissors']
-            // this.player2.turn = ['rock', 'paper', 'scissors']
-            // if (this.player1.turn == this.player2.turn){
-            //     return null
-            // }
-            // if (this.player1.turn == 'rock' & this.player2.turn == 'scissors') or (this.player1.turn == 'scissors' & this.player2.turn == 'paper') or (this.player1.turn == 'paper' & this.player2.turn == 'rock') {
-            //     return this.player1
-            // }
-            // if (this.player2.turn == 'rock' & this.player1.turn == 'scissors') or (this.player2.turn == 'scissors' & this.player1.turn == 'paper') or (this.player2.turn == 'paper' & this.player1.turn == 'rock') {
-            //     return this.player2
-            // }
+            - this.player1.turn can be 'rock', 'paper', or 'scissors'
+            - this.player2.turn can be 'rock', 'paper', or 'scissors'
 
+            - return this.player1 if player1 wins
+            - return this.player2 if player2 wins
+            - return null if there is a draw
+        */
+
+        
         return null
     }
 }
